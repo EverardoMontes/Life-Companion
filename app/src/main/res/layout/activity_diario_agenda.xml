@@ -19,33 +19,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv1"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingresa la fecha y cómo te sentiste"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#3D6762"/>
+            android:background="@android:color/darker_gray">
 
-        <EditText
-            android:id="@+id/et1"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:clickable="false"
-            android:ems="10"
-            android:focusable="false"
-            android:hint="Ingresa la fecha"
-            android:inputType="date"
-            android:textColor="#3D6762" />
+            <ImageButton
+                android:id="@+id/volverACalendario"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:background="#00FFFFFF"
+                android:src="?attr/homeAsUpIndicator"></ImageButton>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Describe lo que pasó en tu día. \n Te leeré atentamente"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_weight="3"
+                ></TextView>
 
-        <Button
-            android:id="@+id/boton2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/mybutton"
-            android:text="Guardar Entrada"
-            android:textColor="#3D6762" />
+            <ImageButton
+                android:id="@+id/elegirEmocion"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:background="#00FFFFFF"
+                android:src="@android:drawable/ic_media_play"></ImageButton>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et2"
@@ -53,7 +58,7 @@
             android:layout_height="match_parent"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Ingresa aquí tus sentimientos"
+            android:hint="Escribe tu día! :D"
             android:inputType="textMultiLine"
             android:textColor="#3D6762" />
 

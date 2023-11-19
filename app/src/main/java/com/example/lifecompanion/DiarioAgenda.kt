@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import java.io.BufferedReader
@@ -17,29 +18,28 @@ class DiarioAgenda : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diario_agenda)
-        val et1=findViewById<EditText>(R.id.et1)
         val et2=findViewById<EditText>(R.id.et2)
-        val boton2=findViewById<Button>(R.id.boton2)
+        val elegirEmocion=findViewById<ImageButton>(R.id.elegirEmocion)
+        val volver=findViewById<ImageButton>(R.id.volverACalendario)
+
         val idUsuario = intent.getStringExtra("id")
-        var fechaAEnviar =""
-        boton2.setOnClickListener {
-            val nomarchivo = et1.text.toString().replace('/','-')
+        var fechaAEnviar =intent.getStringExtra("fecha")
+        elegirEmocion.setOnClickListener {
+            //val nomarchivo = et1.text.toString().replace('/','-')
             try {
-                val archivo = OutputStreamWriter(openFileOutput(nomarchivo, Activity.MODE_PRIVATE))
+
+                /*ESTO FUNCIONA PERO SOLO FUNCIONA EN CONJUNTO CON ARCHIVOS LOCALES DE ABAJO*/
+                /*val archivo = OutputStreamWriter(openFileOutput(nomarchivo, Activity.MODE_PRIVATE))
                 archivo.write(et2.text.toString())
                 archivo.flush()
-                archivo.close()
+                archivo.close()*/
             } catch (e: IOException) {
             }
-            Toast.makeText(this, "Los datos fueron grabados", Toast.LENGTH_SHORT).show()
-            et1.setText("")
-            et2.setText("")
         }
-        et1.setOnClickListener{showDatePickerDialog()}
-
-        et1.doAfterTextChanged {
+        /*et1.doAfterTextChanged {
+            var nomarchivo = et1.text.toString().replace('/', '-')
         //ESTO CLAARO QUE FUNCIONA, PERO ES PARA LEER POR ARCHIVOS LOCALES   --------------
-        /*var nomarchivo = et1.text.toString().replace('/', '-')
+        *//*var nomarchivo = et1.text.toString().replace('/', '-')
             if (fileList().contains(nomarchivo)) {
                 try {
                     val archivo = InputStreamReader(openFileInput(nomarchivo))
@@ -57,12 +57,12 @@ class DiarioAgenda : AppCompatActivity() {
                 }
             } else {
                 et2.setText("")
-            }*/
+            }*//*
             // AQUI TERMINA ARCHIVOS LOCALES ----------------
 
-        }
+        }*/
     }
-    private fun showDatePickerDialog(){
+   /* private fun showDatePickerDialog(){
         val datePicker = DatePickerFragment {day, month, year -> onDaySelected(day, month, year)}
         datePicker.show(supportFragmentManager, "datePicker")
     }
@@ -70,5 +70,5 @@ class DiarioAgenda : AppCompatActivity() {
         val et1 = findViewById<EditText>(R.id.et1)
         et1.setText("${day}/${month+1}/${year}")
 
-    }
+    }*/
 }

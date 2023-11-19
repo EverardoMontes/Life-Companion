@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             // Do some work here
             //  Toast.makeText(view.context,"No encontrado",Toast.LENGTH_LONG).show()
             val intento1 = Intent(this, DiarioAgenda::class.java)
+            val intentoPRUEBACALENDARIO = Intent(this, calendario::class.java)
             CoroutineScope(Dispatchers.IO).launch {
                 val miusuario = UsuariosDBClient.service.loginUsuario(user.text.toString(), pass.text.toString())
                 try {
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                                 intento1.putExtra("user",user.text.toString())
                                 intento1.putExtra("pass",pass.text.toString())
                                 intento1.putExtra("id",body.records.first().id.toString())
-                                startActivity(intento1)
+                                startActivity(intentoPRUEBACALENDARIO)
                             } else {
                                 Log.d("MainActivity", "No Hay usuarios")
                                 // Alerta("Usuarios","No esta registrado este usuario!")
