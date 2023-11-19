@@ -3,38 +3,125 @@ package com.example.lifecompanion
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
 class DiarioAgenda : AppCompatActivity() {
+
+    data class entrada(
+        val id:String,
+        val user:String,
+        val entry:String,
+        val feel:String,
+        var fecha:String
+    )
+
+    data class Resultados(
+        val records:List<entrada>
+    )
+
+    interface usuariosDBService{
+        @GET("getEntradasLifeCompanion.php")
+        fun getEntry(@Query("user") user: String, @Query("date") date: String): Call<Resultados>
+        @GET("agregarEntradasLife.php")
+        fun sendEntry(@Query("user") user: String, @Query("entry") entry: String, @Query("feel") feel: String, @Query("fecha") fecha: String): Call<Resultados>
+    }
+
+    interface usuariosDBServiceSEND{
+
+    }
+
+    object UsuariosDBClient {
+        private val retrofit = Retrofit.Builder()
+            .baseUrl("https://everardomontes.000webhostapp.com/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val service=retrofit.create(usuariosDBService::class.java)
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diario_agenda)
         val et2=findViewById<EditText>(R.id.et2)
         val elegirEmocion=findViewById<ImageButton>(R.id.elegirEmocion)
         val volver=findViewById<ImageButton>(R.id.volverACalendario)
-
+        val sentimiento = findViewById<EditText>(R.id.textoSentimiento)
         val idUsuario = intent.getStringExtra("id")
         var fechaAEnviar =intent.getStringExtra("fecha")
+
+        // ESTO BUSCA ALGUNA ENTRADA QUE YA EXISTA EN LA BASE DE DATOS
+        CoroutineScope(Dispatchers.IO).launch {
+            val consulta = DiarioAgenda.UsuariosDBClient.service.getEntry(idUsuario.toString(), fechaAEnviar.toString())
+            try {
+                val body = consulta.execute().body()
+
+                if (body != null) {
+                    runOnUiThread {
+                        if (body.records.size != 0) {
+                            Toast.makeText(this@DiarioAgenda,"SÍ HAY DATOS",Toast.LENGTH_LONG).show()
+
+                            et2.setText(body.records.first().entry.toString())
+                            sentimiento.setText(body.records.first().feel.toString())
+                        } else {
+                            Toast.makeText(this@DiarioAgenda,"SÍ HAY DATOS",Toast.LENGTH_LONG).show()
+                            et2.setText("")
+                            sentimiento.setText("")
+                        }
+                    }
+                }
+            }catch(e: IOException)
+            {
+                Toast.makeText(this@DiarioAgenda,"ERROR",Toast.LENGTH_LONG).show()
+            }
+        }
+
+
         elegirEmocion.setOnClickListener {
             //val nomarchivo = et1.text.toString().replace('/','-')
-            try {
+            CoroutineScope(Dispatchers.IO).launch {
+                val consulta = DiarioAgenda.UsuariosDBClient.service.sendEntry(idUsuario.toString(),et2.text.toString(),sentimiento.text.toString(),fechaAEnviar.toString())
+                try {
+                    val body = consulta.execute().body()
 
-                /*ESTO FUNCIONA PERO SOLO FUNCIONA EN CONJUNTO CON ARCHIVOS LOCALES DE ABAJO*/
-                /*val archivo = OutputStreamWriter(openFileOutput(nomarchivo, Activity.MODE_PRIVATE))
-                archivo.write(et2.text.toString())
-                archivo.flush()
-                archivo.close()*/
-            } catch (e: IOException) {
+                    if (body != null) {
+                        runOnUiThread {
+                            if (body.records.size != 0) {
+                                Toast.makeText(this@DiarioAgenda,"Registraste la entrada :D",Toast.LENGTH_LONG).show()
+
+                            } else {
+                                et2.setText("")
+                                sentimiento.setText("")
+                                Toast.makeText(this@DiarioAgenda,"Algo salió tremenda e inexplicablemente mal",Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }catch(e: IOException)
+                {
+                    Toast.makeText(this@DiarioAgenda,"Algo salió tremenda, HORRIBLE e inexplicablemente mal",Toast.LENGTH_LONG).show()
+
+                }
             }
+        }
+
+        volver.setOnClickListener {
+            finish()
         }
         /*et1.doAfterTextChanged {
             var nomarchivo = et1.text.toString().replace('/', '-')

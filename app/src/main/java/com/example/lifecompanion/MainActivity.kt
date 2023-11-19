@@ -88,6 +88,9 @@ class MainActivity : AppCompatActivity() {
                                 intento1.putExtra("user",user.text.toString())
                                 intento1.putExtra("pass",pass.text.toString())
                                 intento1.putExtra("id",body.records.first().id.toString())
+                                intentoPRUEBACALENDARIO.putExtra("user",user.text.toString())
+                                intentoPRUEBACALENDARIO.putExtra("pass",pass.text.toString())
+                                intentoPRUEBACALENDARIO.putExtra("id",body.records.first().id.toString())
                                 startActivity(intentoPRUEBACALENDARIO)
                             } else {
                                 Log.d("MainActivity", "No Hay usuarios")

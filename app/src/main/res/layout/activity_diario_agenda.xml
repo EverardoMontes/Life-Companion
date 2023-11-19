@@ -55,12 +55,44 @@
         <EditText
             android:id="@+id/et2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="409dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Escribe tu día! :D"
             android:inputType="textMultiLine"
             android:textColor="#3D6762" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="3"
+                android:gravity="center_vertical"
+                android:text="Describe todo tu día con una sola emoción!"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"></TextView>
+
+            <EditText
+                android:id="@+id/textoSentimiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:ems="10"
+                android:inputType="text"
+                android:text=""
+                android:background="#FFFFFF"
+                android:gravity="center_vertical"
+                android:hint="Escribe una emoción :D!"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
