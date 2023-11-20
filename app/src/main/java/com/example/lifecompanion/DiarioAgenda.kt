@@ -39,13 +39,13 @@ class DiarioAgenda : AppCompatActivity() {
 
     interface usuariosDBService{
         @GET("getEntradasLifeCompanion.php")
-        fun getEntry(@Query("user") user: String, @Query("date") date: String): Call<Resultados>
-        @GET("agregarEntradasLife.php")
-        fun sendEntry(@Query("user") user: String, @Query("entry") entry: String, @Query("feel") feel: String, @Query("fecha") fecha: String): Call<Resultados>
+        fun getEntry(@Query("user") user: String, @Query("fecha") fecha: String): Call<Resultados>
+
     }
 
     interface usuariosDBServiceSEND{
-
+        @GET("agregarEntradasLife.php")
+        fun sendEntry(@Query("user") user: String, @Query("entry") entry: String, @Query("feel") feel: String, @Query("fecha") fecha: String): Call<Resultados>
     }
 
     object UsuariosDBClient {
@@ -54,6 +54,7 @@ class DiarioAgenda : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service=retrofit.create(usuariosDBService::class.java)
+        val send=retrofit.create(usuariosDBServiceSEND::class.java)
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,12 +76,11 @@ class DiarioAgenda : AppCompatActivity() {
                 if (body != null) {
                     runOnUiThread {
                         if (body.records.size != 0) {
-                            Toast.makeText(this@DiarioAgenda,"SÍ HAY DATOS",Toast.LENGTH_LONG).show()
-
-                            et2.setText(body.records.first().entry.toString())
-                            sentimiento.setText(body.records.first().feel.toString())
+                            val entrada = body.records.first().entry.toString()
+                            val feel = body.records.first().feel.toString()
+                            et2.setText(entrada)
+                            sentimiento.setText(feel)
                         } else {
-                            Toast.makeText(this@DiarioAgenda,"SÍ HAY DATOS",Toast.LENGTH_LONG).show()
                             et2.setText("")
                             sentimiento.setText("")
                         }
@@ -88,7 +88,7 @@ class DiarioAgenda : AppCompatActivity() {
                 }
             }catch(e: IOException)
             {
-                Toast.makeText(this@DiarioAgenda,"ERROR",Toast.LENGTH_LONG).show()
+
             }
         }
 
@@ -96,25 +96,21 @@ class DiarioAgenda : AppCompatActivity() {
         elegirEmocion.setOnClickListener {
             //val nomarchivo = et1.text.toString().replace('/','-')
             CoroutineScope(Dispatchers.IO).launch {
-                val consulta = DiarioAgenda.UsuariosDBClient.service.sendEntry(idUsuario.toString(),et2.text.toString(),sentimiento.text.toString(),fechaAEnviar.toString())
+                val consulta = DiarioAgenda.UsuariosDBClient.send.sendEntry(idUsuario.toString(),et2.text.toString(),sentimiento.text.toString(),fechaAEnviar.toString())
                 try {
                     val body = consulta.execute().body()
 
                     if (body != null) {
                         runOnUiThread {
                             if (body.records.size != 0) {
-                                Toast.makeText(this@DiarioAgenda,"Registraste la entrada :D",Toast.LENGTH_LONG).show()
-
+                                    finish()
                             } else {
-                                et2.setText("")
-                                sentimiento.setText("")
-                                Toast.makeText(this@DiarioAgenda,"Algo salió tremenda e inexplicablemente mal",Toast.LENGTH_LONG).show()
+
                             }
                         }
                     }
                 }catch(e: IOException)
                 {
-                    Toast.makeText(this@DiarioAgenda,"Algo salió tremenda, HORRIBLE e inexplicablemente mal",Toast.LENGTH_LONG).show()
 
                 }
             }

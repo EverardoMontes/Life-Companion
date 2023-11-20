@@ -27,7 +27,7 @@ class calendario : AppCompatActivity() {
                 "${dayOfMonth}/${month}/${year} es la fecha que seleccionaste. Estás menso o que?",
                 Toast.LENGTH_LONG
             ).show();*/
-            fechaSeleccion="${year}-${month}-${dayOfMonth}"
+            fechaSeleccion="${year}-${month+1}-${dayOfMonth}"
         }
 
         volver.setOnClickListener {
