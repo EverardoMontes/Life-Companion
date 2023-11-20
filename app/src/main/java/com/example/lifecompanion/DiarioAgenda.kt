@@ -48,6 +48,11 @@ class DiarioAgenda : AppCompatActivity() {
         fun sendEntry(@Query("user") user: String, @Query("entry") entry: String, @Query("feel") feel: String, @Query("fecha") fecha: String): Call<Resultados>
     }
 
+    interface usuariosDBServiceUPDATE{
+        @GET("agregarEntradasLife.php")
+        fun sendEntry(@Query("user") user: String, @Query("entry") entry: String, @Query("feel") feel: String, @Query("fecha") fecha: String): Call<Resultados>
+    }
+
     object UsuariosDBClient {
         private val retrofit = Retrofit.Builder()
             .baseUrl("https://everardomontes.000webhostapp.com/api/")
@@ -66,6 +71,7 @@ class DiarioAgenda : AppCompatActivity() {
         val sentimiento = findViewById<EditText>(R.id.textoSentimiento)
         val idUsuario = intent.getStringExtra("id")
         var fechaAEnviar =intent.getStringExtra("fecha")
+        var entradaExistente = false
 
         // ESTO BUSCA ALGUNA ENTRADA QUE YA EXISTA EN LA BASE DE DATOS
         CoroutineScope(Dispatchers.IO).launch {
@@ -80,6 +86,7 @@ class DiarioAgenda : AppCompatActivity() {
                             val feel = body.records.first().feel.toString()
                             et2.setText(entrada)
                             sentimiento.setText(feel)
+                            entradaExistente=true
                         } else {
                             et2.setText("")
                             sentimiento.setText("")
@@ -96,23 +103,28 @@ class DiarioAgenda : AppCompatActivity() {
         elegirEmocion.setOnClickListener {
             //val nomarchivo = et1.text.toString().replace('/','-')
             CoroutineScope(Dispatchers.IO).launch {
-                val consulta = DiarioAgenda.UsuariosDBClient.send.sendEntry(idUsuario.toString(),et2.text.toString(),sentimiento.text.toString(),fechaAEnviar.toString())
-                try {
-                    val body = consulta.execute().body()
+                if(entradaExistente==true){
 
-                    if (body != null) {
-                        runOnUiThread {
-                            if (body.records.size != 0) {
+                }else{
+                    val consulta = DiarioAgenda.UsuariosDBClient.send.sendEntry(idUsuario.toString(),et2.text.toString(),sentimiento.text.toString(),fechaAEnviar.toString())
+                    try {
+                        val body = consulta.execute().body()
+
+                        if (body != null) {
+                            runOnUiThread {
+                                if (body.records.size != 0) {
                                     finish()
-                            } else {
+                                } else {
 
+                                }
                             }
                         }
-                    }
-                }catch(e: IOException)
-                {
+                    }catch(e: IOException)
+                    {
 
+                    }
                 }
+
             }
         }
 
