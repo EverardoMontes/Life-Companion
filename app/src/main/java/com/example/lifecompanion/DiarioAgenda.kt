@@ -132,6 +132,7 @@ class DiarioAgenda : AppCompatActivity() {
                         if (body != null) {
                             runOnUiThread {
                                 if (body.records.size != 0) {
+                                    entradaExistente=true
                                     finish()
                                 } else {
 

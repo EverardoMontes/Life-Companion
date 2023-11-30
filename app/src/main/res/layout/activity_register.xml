@@ -85,7 +85,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/mybutton"
             android:text="Registrarse"
-            android:textColor="#3D6762" />
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/buttonBack"
@@ -94,7 +94,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/mybutton"
             android:text="Volver"
-            android:textColor="#3D6762" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
